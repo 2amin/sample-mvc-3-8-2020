@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1169
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication1", "WebApplication1\WebApplication1.csproj", "{3D85B5E4-081C-4803-BFE2-F43989AFE983}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Script", "Script", "{02C19A2C-FB13-47B5-9A47-CEEFF175840E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UDT", "UDT", "{9563754B-AC20-45C0-90C3-91BD598FE4F3}"
+	ProjectSection(SolutionItems) = preProject
+		Udt_Insertproduct.sql = Udt_Insertproduct.sql
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "USP", "USP", "{71A2792D-B9A7-4A8C-A702-A16DB8018C78}"
+	ProjectSection(SolutionItems) = preProject
+		Usp_Insertproduct.sql = Usp_Insertproduct.sql
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3D85B5E4-081C-4803-BFE2-F43989AFE983}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D85B5E4-081C-4803-BFE2-F43989AFE983}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D85B5E4-081C-4803-BFE2-F43989AFE983}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D85B5E4-081C-4803-BFE2-F43989AFE983}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9563754B-AC20-45C0-90C3-91BD598FE4F3} = {02C19A2C-FB13-47B5-9A47-CEEFF175840E}
+		{71A2792D-B9A7-4A8C-A702-A16DB8018C78} = {02C19A2C-FB13-47B5-9A47-CEEFF175840E}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {320324BD-5EE5-409D-82C2-13FEF5BFC9FF}
+	EndGlobalSection
+EndGlobal
