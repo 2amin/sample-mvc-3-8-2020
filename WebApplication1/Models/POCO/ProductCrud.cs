@@ -7,13 +7,15 @@ namespace WebApplication1.Models.POCO
 {
     public class ProductCrud
     {
-        public void Insert(Helper.SPhelper.Product.InsertProduct Ref_Inserproduct)
+        #region [-Insert(List<Helper.SPhelper.Product.InsertProduct> Ref_Inserproduct)-]
+        public void Insert(List<Helper.SPhelper.Product.InsertProduct> Ref_Inserproduct)
         {
-            using (var contaxt=new Models.DomainModel.EF.sample01Entities())
+            using (var contaxt = new Models.DomainModel.EF.sample01Entities())
             {
                 try
                 {
-                    contaxt.Database.ExecuteSqlCommand(Helper.SPhelper.Product.Producthelper.Insertproduct,)
+                    contaxt.Database.ExecuteSqlCommand(Helper.SPhelper.Product.Producthelper.Insertproduct,
+                        Helper.SPhelper.Product.Producthelper.SetInsertParameters(Ref_Inserproduct));
 
                 }
                 catch (Exception)
@@ -21,8 +23,16 @@ namespace WebApplication1.Models.POCO
 
                     throw;
                 }
+                finally
+                {
+                    if (contaxt != null)
+                    {
+                        contaxt.Dispose();
+                    }
+                }
 
             }
-        }
+        } 
+        #endregion
     }
 }
