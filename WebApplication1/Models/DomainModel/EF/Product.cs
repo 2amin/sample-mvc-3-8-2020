@@ -17,7 +17,7 @@ namespace WebApplication1.Models.DomainModel.EF
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Product()
         {
-            this.OrderDetail = new HashSet<OrderDetail>();
+            this.OrderDetails = new HashSet<OrderDetail>();
         }
     
         public int Productid { get; set; }
@@ -25,8 +25,10 @@ namespace WebApplication1.Models.DomainModel.EF
         public decimal Unitprice { get; set; }
         public decimal discount { get; set; }
         public byte[] image { get; set; }
+        public Nullable<int> Categoryid { get; set; }
     
+        public virtual ctegory ctegory { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<OrderDetail> OrderDetail { get; set; }
+        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
     }
 }

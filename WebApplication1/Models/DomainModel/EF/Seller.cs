@@ -17,7 +17,7 @@ namespace WebApplication1.Models.DomainModel.EF
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Seller()
         {
-            this.OrderMaster = new HashSet<OrderMaster>();
+            this.OrderMasters = new HashSet<OrderMaster>();
         }
     
         public string Sellernationalid { get; set; }
@@ -26,6 +26,6 @@ namespace WebApplication1.Models.DomainModel.EF
         public string Sellerphonenumber { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<OrderMaster> OrderMaster { get; set; }
+        public virtual ICollection<OrderMaster> OrderMasters { get; set; }
     }
 }

@@ -50,9 +50,10 @@
           </Key>
           <Property Name="Productid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Productname" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Unitprice" Type="money" Nullable="false" />
-          <Property Name="discount" Type="money" Nullable="false" />
+          <Property Name="Unitprice" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="discount" Type="decimal" Precision="18" Scale="0" Nullable="false" />
           <Property Name="image" Type="image" />
+          <Property Name="Categoryid" Type="int" />
         </EntityType>
         <EntityType Name="Seller">
           <Key>
@@ -121,6 +122,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Product_Category">
+          <End Role="ctegory" Type="Self.ctegory" Multiplicity="0..1" />
+          <End Role="Product" Type="Self.Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ctegory">
+              <PropertyRef Name="categoryid" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="Categoryid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
         <Function Name="Insertbuyer" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="Insertorder" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
@@ -183,6 +196,10 @@
             <End Role="Seller" EntitySet="Seller" />
             <End Role="OrderMaster" EntitySet="OrderMaster" />
           </AssociationSet>
+          <AssociationSet Name="FK_Product_Category" Association="Self.FK_Product_Category">
+            <End Role="ctegory" EntitySet="ctegory" />
+            <End Role="Product" EntitySet="Product" />
+          </AssociationSet>
         </EntityContainer>
       </Schema>
     </edmx:StorageModels>
@@ -197,7 +214,7 @@
           <Property Name="Buyername" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Buyersurname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Buyerphonenumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="OrderMaster" Relationship="Self.FK_OrderMaster_Buyer" FromRole="Buyer" ToRole="OrderMaster" />
+          <NavigationProperty Name="OrderMasters" Relationship="Self.FK_OrderMaster_Buyer" FromRole="Buyer" ToRole="OrderMaster" />
         </EntityType>
         <EntityType Name="ctegory">
           <Key>
@@ -205,12 +222,15 @@
           </Key>
           <Property Name="categoryid" Type="Int32" Nullable="false" />
           <Property Name="categorytype" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Products" Relationship="Self.FK_Product_Category" FromRole="ctegory" ToRole="Product" />
         </EntityType>
         <EntityType Name="OrderDetail">
           <Key>
             <PropertyRef Name="Rowid" />
           </Key>
           <Property Name="Rowid" Type="Int32" Nullable="false" />
+          <Property Name="Orderid" Type="Int32" Nullable="false" />
+          <Property Name="Productid" Type="Int32" Nullable="false" />
           <Property Name="Quantity" Type="Int32" Nullable="false" />
           <Property Name="Finalprice" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
           <Property Name="Finaldiscount" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
@@ -222,12 +242,14 @@
             <PropertyRef Name="Orderid" />
           </Key>
           <Property Name="Orderid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Sellernationalid" Type="String" MaxLength="12" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Buyernationalid" Type="String" MaxLength="12" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Totalprice" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
           <Property Name="Totaldiscount" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
           <Property Name="Purchasedate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="Purchasetime" Type="Time" Nullable="false" Precision="7" />
           <NavigationProperty Name="Buyer" Relationship="Self.FK_OrderMaster_Buyer" FromRole="OrderMaster" ToRole="Buyer" />
-          <NavigationProperty Name="OrderDetail" Relationship="Self.FK_OrderDetail_OrderMaster" FromRole="OrderMaster" ToRole="OrderDetail" />
+          <NavigationProperty Name="OrderDetails" Relationship="Self.FK_OrderDetail_OrderMaster" FromRole="OrderMaster" ToRole="OrderDetail" />
           <NavigationProperty Name="Seller" Relationship="Self.FK_OrderMaster_Seller" FromRole="OrderMaster" ToRole="Seller" />
         </EntityType>
         <EntityType Name="Product">
@@ -236,10 +258,12 @@
           </Key>
           <Property Name="Productid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Productname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Unitprice" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
-          <Property Name="discount" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="Unitprice" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="discount" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
           <Property Name="image" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <NavigationProperty Name="OrderDetail" Relationship="Self.FK_OrderDetail_Product" FromRole="Product" ToRole="OrderDetail" />
+          <Property Name="Categoryid" Type="Int32" />
+          <NavigationProperty Name="ctegory" Relationship="Self.FK_Product_Category" FromRole="Product" ToRole="ctegory" />
+          <NavigationProperty Name="OrderDetails" Relationship="Self.FK_OrderDetail_Product" FromRole="Product" ToRole="OrderDetail" />
         </EntityType>
         <EntityType Name="Seller">
           <Key>
@@ -249,9 +273,9 @@
           <Property Name="Sellername" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Sellersurname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Sellerphonenumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="OrderMaster" Relationship="Self.FK_OrderMaster_Seller" FromRole="Seller" ToRole="OrderMaster" />
+          <NavigationProperty Name="OrderMasters" Relationship="Self.FK_OrderMaster_Seller" FromRole="Seller" ToRole="OrderMaster" />
         </EntityType>
-        <EntityType Name="sysdiagrams">
+        <EntityType Name="sysdiagram">
           <Key>
             <PropertyRef Name="diagram_id" />
           </Key>
@@ -264,51 +288,147 @@
         <Association Name="FK_OrderMaster_Buyer">
           <End Role="Buyer" Type="Self.Buyer" Multiplicity="1" />
           <End Role="OrderMaster" Type="Self.OrderMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Buyer">
+              <PropertyRef Name="Buyernationalnumber" />
+            </Principal>
+            <Dependent Role="OrderMaster">
+              <PropertyRef Name="Buyernationalid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Product_Category">
+          <End Role="ctegory" Type="Self.ctegory" Multiplicity="0..1" />
+          <End Role="Product" Type="Self.Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ctegory">
+              <PropertyRef Name="categoryid" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="Categoryid" />
+            </Dependent>
+          </ReferentialConstraint>
         </Association>
         <Association Name="FK_OrderDetail_OrderMaster">
           <End Role="OrderMaster" Type="Self.OrderMaster" Multiplicity="1" />
           <End Role="OrderDetail" Type="Self.OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderMaster">
+              <PropertyRef Name="Orderid" />
+            </Principal>
+            <Dependent Role="OrderDetail">
+              <PropertyRef Name="Orderid" />
+            </Dependent>
+          </ReferentialConstraint>
         </Association>
         <Association Name="FK_OrderDetail_Product">
           <End Role="Product" Type="Self.Product" Multiplicity="1" />
           <End Role="OrderDetail" Type="Self.OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Productid" />
+            </Principal>
+            <Dependent Role="OrderDetail">
+              <PropertyRef Name="Productid" />
+            </Dependent>
+          </ReferentialConstraint>
         </Association>
         <Association Name="FK_OrderMaster_Seller">
           <End Role="Seller" Type="Self.Seller" Multiplicity="1" />
           <End Role="OrderMaster" Type="Self.OrderMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Seller">
+              <PropertyRef Name="Sellernationalid" />
+            </Principal>
+            <Dependent Role="OrderMaster">
+              <PropertyRef Name="Sellernationalid" />
+            </Dependent>
+          </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="sample01Entities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Buyer" EntityType="Self.Buyer" />
-          <EntitySet Name="ctegory" EntityType="Self.ctegory" />
-          <EntitySet Name="OrderDetail" EntityType="Self.OrderDetail" />
-          <EntitySet Name="OrderMaster" EntityType="Self.OrderMaster" />
-          <EntitySet Name="Product" EntityType="Self.Product" />
-          <EntitySet Name="Seller" EntityType="Self.Seller" />
-          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+        <EntityContainer Name="sample01Entities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Buyers" EntityType="Self.Buyer" />
+          <EntitySet Name="ctegories" EntityType="Self.ctegory" />
+          <EntitySet Name="OrderDetails" EntityType="Self.OrderDetail" />
+          <EntitySet Name="OrderMasters" EntityType="Self.OrderMaster" />
+          <EntitySet Name="Products" EntityType="Self.Product" />
+          <EntitySet Name="Sellers" EntityType="Self.Seller" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
           <AssociationSet Name="FK_OrderMaster_Buyer" Association="Self.FK_OrderMaster_Buyer">
-            <End Role="Buyer" EntitySet="Buyer" />
-            <End Role="OrderMaster" EntitySet="OrderMaster" />
+            <End Role="Buyer" EntitySet="Buyers" />
+            <End Role="OrderMaster" EntitySet="OrderMasters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Product_Category" Association="Self.FK_Product_Category">
+            <End Role="ctegory" EntitySet="ctegories" />
+            <End Role="Product" EntitySet="Products" />
           </AssociationSet>
           <AssociationSet Name="FK_OrderDetail_OrderMaster" Association="Self.FK_OrderDetail_OrderMaster">
-            <End Role="OrderMaster" EntitySet="OrderMaster" />
-            <End Role="OrderDetail" EntitySet="OrderDetail" />
+            <End Role="OrderMaster" EntitySet="OrderMasters" />
+            <End Role="OrderDetail" EntitySet="OrderDetails" />
           </AssociationSet>
           <AssociationSet Name="FK_OrderDetail_Product" Association="Self.FK_OrderDetail_Product">
-            <End Role="Product" EntitySet="Product" />
-            <End Role="OrderDetail" EntitySet="OrderDetail" />
+            <End Role="Product" EntitySet="Products" />
+            <End Role="OrderDetail" EntitySet="OrderDetails" />
           </AssociationSet>
           <AssociationSet Name="FK_OrderMaster_Seller" Association="Self.FK_OrderMaster_Seller">
-            <End Role="Seller" EntitySet="Seller" />
-            <End Role="OrderMaster" EntitySet="OrderMaster" />
+            <End Role="Seller" EntitySet="Sellers" />
+            <End Role="OrderMaster" EntitySet="OrderMasters" />
           </AssociationSet>
+          <FunctionImport Name="Insertbuyer" />
+          <FunctionImport Name="Insertorder" />
+          <FunctionImport Name="Insertproduct" />
+          <FunctionImport Name="Insertseller" />
+          <FunctionImport Name="sp_alterdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_creatediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_dropdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(sample01Model.sp_helpdiagramdefinition_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(sample01Model.sp_helpdiagrams_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_renamediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="new_diagramname" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_upgraddiagrams" />
+          <FunctionImport Name="Updatebuyer" />
+          <FunctionImport Name="Updateordermaster" />
+          <FunctionImport Name="updateseller" />
         </EntityContainer>
+        <ComplexType Name="sp_helpdiagramdefinition_Result">
+          <Property Type="Int32" Name="version" Nullable="true" />
+          <Property Type="Binary" Name="definition" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_helpdiagrams_Result">
+          <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
+          <Property Type="Int32" Name="OwnerID" Nullable="false" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="sample01ModelStoreContainer" CdmEntityContainer="sample01Entities">
-          <EntitySetMapping Name="Buyer">
+        <EntityContainerMapping StorageEntityContainer="sample01ModelStoreContainer" CdmEntityContainer="sample01Entities1">
+          <EntitySetMapping Name="Buyers">
             <EntityTypeMapping TypeName="sample01Model.Buyer">
               <MappingFragment StoreEntitySet="Buyer">
                 <ScalarProperty Name="Buyernationalnumber" ColumnName="Buyernationalnumber" />
@@ -318,7 +438,7 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="ctegory">
+          <EntitySetMapping Name="ctegories">
             <EntityTypeMapping TypeName="sample01Model.ctegory">
               <MappingFragment StoreEntitySet="ctegory">
                 <ScalarProperty Name="categoryid" ColumnName="categoryid" />
@@ -326,20 +446,24 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="OrderDetail">
+          <EntitySetMapping Name="OrderDetails">
             <EntityTypeMapping TypeName="sample01Model.OrderDetail">
               <MappingFragment StoreEntitySet="OrderDetail">
                 <ScalarProperty Name="Rowid" ColumnName="Rowid" />
+                <ScalarProperty Name="Orderid" ColumnName="Orderid" />
+                <ScalarProperty Name="Productid" ColumnName="Productid" />
                 <ScalarProperty Name="Quantity" ColumnName="Quantity" />
                 <ScalarProperty Name="Finalprice" ColumnName="Finalprice" />
                 <ScalarProperty Name="Finaldiscount" ColumnName="Finaldiscount" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="OrderMaster">
+          <EntitySetMapping Name="OrderMasters">
             <EntityTypeMapping TypeName="sample01Model.OrderMaster">
               <MappingFragment StoreEntitySet="OrderMaster">
                 <ScalarProperty Name="Orderid" ColumnName="Orderid" />
+                <ScalarProperty Name="Sellernationalid" ColumnName="Sellernationalid" />
+                <ScalarProperty Name="Buyernationalid" ColumnName="Buyernationalid" />
                 <ScalarProperty Name="Totalprice" ColumnName="Totalprice" />
                 <ScalarProperty Name="Totaldiscount" ColumnName="Totaldiscount" />
                 <ScalarProperty Name="Purchasedate" ColumnName="Purchasedate" />
@@ -347,7 +471,7 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Product">
+          <EntitySetMapping Name="Products">
             <EntityTypeMapping TypeName="sample01Model.Product">
               <MappingFragment StoreEntitySet="Product">
                 <ScalarProperty Name="Productid" ColumnName="Productid" />
@@ -355,10 +479,11 @@
                 <ScalarProperty Name="Unitprice" ColumnName="Unitprice" />
                 <ScalarProperty Name="discount" ColumnName="discount" />
                 <ScalarProperty Name="image" ColumnName="image" />
+                <ScalarProperty Name="Categoryid" ColumnName="Categoryid" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Seller">
+          <EntitySetMapping Name="Sellers">
             <EntityTypeMapping TypeName="sample01Model.Seller">
               <MappingFragment StoreEntitySet="Seller">
                 <ScalarProperty Name="Sellernationalid" ColumnName="Sellernationalid" />
@@ -369,7 +494,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="sysdiagrams">
-            <EntityTypeMapping TypeName="sample01Model.sysdiagrams">
+            <EntityTypeMapping TypeName="sample01Model.sysdiagram">
               <MappingFragment StoreEntitySet="sysdiagrams">
                 <ScalarProperty Name="name" ColumnName="name" />
                 <ScalarProperty Name="principal_id" ColumnName="principal_id" />
@@ -379,38 +504,37 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="FK_OrderMaster_Buyer" TypeName="sample01Model.FK_OrderMaster_Buyer" StoreEntitySet="OrderMaster">
-            <EndProperty Name="Buyer">
-              <ScalarProperty Name="Buyernationalnumber" ColumnName="Buyernationalid" />
-            </EndProperty>
-            <EndProperty Name="OrderMaster">
-              <ScalarProperty Name="Orderid" ColumnName="Orderid" />
-            </EndProperty>
-          </AssociationSetMapping>
-          <AssociationSetMapping Name="FK_OrderDetail_OrderMaster" TypeName="sample01Model.FK_OrderDetail_OrderMaster" StoreEntitySet="OrderDetail">
-            <EndProperty Name="OrderMaster">
-              <ScalarProperty Name="Orderid" ColumnName="Orderid" />
-            </EndProperty>
-            <EndProperty Name="OrderDetail">
-              <ScalarProperty Name="Rowid" ColumnName="Rowid" />
-            </EndProperty>
-          </AssociationSetMapping>
-          <AssociationSetMapping Name="FK_OrderDetail_Product" TypeName="sample01Model.FK_OrderDetail_Product" StoreEntitySet="OrderDetail">
-            <EndProperty Name="Product">
-              <ScalarProperty Name="Productid" ColumnName="Productid" />
-            </EndProperty>
-            <EndProperty Name="OrderDetail">
-              <ScalarProperty Name="Rowid" ColumnName="Rowid" />
-            </EndProperty>
-          </AssociationSetMapping>
-          <AssociationSetMapping Name="FK_OrderMaster_Seller" TypeName="sample01Model.FK_OrderMaster_Seller" StoreEntitySet="OrderMaster">
-            <EndProperty Name="Seller">
-              <ScalarProperty Name="Sellernationalid" ColumnName="Sellernationalid" />
-            </EndProperty>
-            <EndProperty Name="OrderMaster">
-              <ScalarProperty Name="Orderid" ColumnName="Orderid" />
-            </EndProperty>
-          </AssociationSetMapping>
+          <FunctionImportMapping FunctionImportName="Insertbuyer" FunctionName="sample01Model.Store.Insertbuyer" />
+          <FunctionImportMapping FunctionImportName="Insertorder" FunctionName="sample01Model.Store.Insertorder" />
+          <FunctionImportMapping FunctionImportName="Insertproduct" FunctionName="sample01Model.Store.Insertproduct" />
+          <FunctionImportMapping FunctionImportName="Insertseller" FunctionName="sample01Model.Store.Insertseller" />
+          <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="sample01Model.Store.sp_alterdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_creatediagram" FunctionName="sample01Model.Store.sp_creatediagram" />
+          <FunctionImportMapping FunctionImportName="sp_dropdiagram" FunctionName="sample01Model.Store.sp_dropdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_helpdiagramdefinition" FunctionName="sample01Model.Store.sp_helpdiagramdefinition">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sample01Model.sp_helpdiagramdefinition_Result">
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_helpdiagrams" FunctionName="sample01Model.Store.sp_helpdiagrams">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="sample01Model.sp_helpdiagrams_Result">
+                <ScalarProperty Name="Database" ColumnName="Database" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Owner" ColumnName="Owner" />
+                <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="sample01Model.Store.sp_renamediagram" />
+          <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="sample01Model.Store.sp_upgraddiagrams" />
+          <FunctionImportMapping FunctionImportName="Updatebuyer" FunctionName="sample01Model.Store.Updatebuyer" />
+          <FunctionImportMapping FunctionImportName="Updateordermaster" FunctionName="sample01Model.Store.Updateordermaster" />
+          <FunctionImportMapping FunctionImportName="updateseller" FunctionName="sample01Model.Store.updateseller" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -425,8 +549,8 @@
     <Options>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="false" />
-        <DesignerProperty Name="IncludeForeignKeysInModel" Value="false" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
       </DesignerInfoPropertySet>

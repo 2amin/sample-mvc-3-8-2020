@@ -11,6 +11,7 @@ namespace WebApplication1.Models.Helper.SPhelper.Product
         public string Productname { get; set; }
         public decimal Unitprice { get; set; }
         public decimal discount { get; set; }
+        public int? categoryid { get; set; }
         public byte[] productimage { get; set; }
     }
 }

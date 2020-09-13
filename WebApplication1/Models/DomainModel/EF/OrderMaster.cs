@@ -17,10 +17,12 @@ namespace WebApplication1.Models.DomainModel.EF
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public OrderMaster()
         {
-            this.OrderDetail = new HashSet<OrderDetail>();
+            this.OrderDetails = new HashSet<OrderDetail>();
         }
     
         public int Orderid { get; set; }
+        public string Sellernationalid { get; set; }
+        public string Buyernationalid { get; set; }
         public decimal Totalprice { get; set; }
         public decimal Totaldiscount { get; set; }
         public System.DateTime Purchasedate { get; set; }
@@ -28,7 +30,7 @@ namespace WebApplication1.Models.DomainModel.EF
     
         public virtual Buyer Buyer { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<OrderDetail> OrderDetail { get; set; }
+        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
         public virtual Seller Seller { get; set; }
     }
 }

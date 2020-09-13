@@ -14,7 +14,16 @@ namespace WebApplication1.Models.DomainModel.EF
     
     public partial class ctegory
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public ctegory()
+        {
+            this.Products = new HashSet<Product>();
+        }
+    
         public int categoryid { get; set; }
         public string categorytype { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Product> Products { get; set; }
     }
 }

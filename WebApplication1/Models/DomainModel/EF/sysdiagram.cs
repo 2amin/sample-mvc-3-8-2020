@@ -12,16 +12,12 @@ namespace WebApplication1.Models.DomainModel.EF
     using System;
     using System.Collections.Generic;
     
-    public partial class OrderDetail
+    public partial class sysdiagram
     {
-        public int Rowid { get; set; }
-        public int Orderid { get; set; }
-        public int Productid { get; set; }
-        public int Quantity { get; set; }
-        public decimal Finalprice { get; set; }
-        public decimal Finaldiscount { get; set; }
-    
-        public virtual OrderMaster OrderMaster { get; set; }
-        public virtual Product Product { get; set; }
+        public string name { get; set; }
+        public int principal_id { get; set; }
+        public int diagram_id { get; set; }
+        public Nullable<int> version { get; set; }
+        public byte[] definition { get; set; }
     }
 }
